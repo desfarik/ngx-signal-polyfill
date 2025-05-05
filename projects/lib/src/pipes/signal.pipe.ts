@@ -22,11 +22,11 @@ export class SignalPipe implements PipeTransform, OnDestroy {
   observable!: Observable<any>;
   latestSignal!: Signal<any>;
 
-  transform<T>(signal: Signal<T>): T | null {
+  transform<T>(signal: Signal<T>): T {
     if (signal !== this.latestSignal) {
       this.observable = toObservable(signal);
       this.latestSignal = signal;
     }
-    return this.asyncPipe.transform<T>(this.observable);
+    return this.asyncPipe.transform<T>(this.observable) || signal();
   }
 }
