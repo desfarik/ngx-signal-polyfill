@@ -33,30 +33,13 @@ export interface ToSignalOptions<T> {
    * not met.
    */
   requireSync?: boolean;
-}
 
-/**
- * Get the current value of an `Observable` as a reactive `Signal`.
- *
- * `toSignal` returns a `Signal` which provides synchronous reactive access to values produced
- * by the given `Observable`, by subscribing to that `Observable`. The returned `Signal` will always
- * have the most recent value emitted by the subscription, and will throw an error if the
- * `Observable` errors.
- *
- * Before the `Observable` emits its first value, the `Signal` will return `undefined`. To avoid
- * this, either an `initialValue` can be passed or the `requireSync` option enabled.
- *
- * By default, the subscription will be automatically cleaned up when the current [injection
- * context](guide/dependency-injection-context) is destroyed. For example, when `toObservable` is
- * called during the construction of a component, the subscription will be cleaned up when the
- * component is destroyed. If an [injection context](/guide/dependency-injection-context) is not
- * available, an explicit `Injector` can be passed instead.
- *
- * If the subscription should persist until the `Observable` itself completes, the `manualCleanup`
- * option can be specified instead, which disables the automatic subscription teardown. No injection
- * context is needed in this configuration as well.
- */
-export function toSignal<T>(source: Observable<T> | Subscribable<T>): Signal<T | undefined>;
+
+  /**
+   * Always provide manualCleanup as true, to avoid memory leaks and simplify migration in Angular 16.
+   */
+  manualCleanup: true,
+}
 
 /**
  * Get the current value of an `Observable` as a reactive `Signal`.
@@ -84,7 +67,7 @@ export function toSignal<T>(source: Observable<T> | Subscribable<T>): Signal<T |
  */
 export function toSignal<T>(
   source: Observable<T> | Subscribable<T>,
-  options?: ToSignalOptions<undefined> & { requireSync?: false }): Signal<T | undefined>;
+  options: ToSignalOptions<undefined> & { requireSync?: false }): Signal<T | undefined>;
 
 
 /**
@@ -143,7 +126,7 @@ export function toSignal<T>(
   source: Observable<T> | Subscribable<T>,
   options: ToSignalOptions<undefined> & { requireSync: true }): Signal<T>;
 export function toSignal<T, U = undefined>(
-  source: Observable<T> | Subscribable<T>, options?: ToSignalOptions<U>): Signal<T | U> {
+  source: Observable<T> | Subscribable<T>, options: ToSignalOptions<U>): Signal<T | U> {
 
   // Note: T is the Observable value type, and U is the initial value type. They don't have to be
   // the same - the returned signal gives values of type `T`.

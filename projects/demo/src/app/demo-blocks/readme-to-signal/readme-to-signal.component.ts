@@ -19,7 +19,7 @@ import { takeUntil } from 'rxjs/operators';
 export class ReadmeToSignalComponent {
   counter$ = new BehaviorSubject(0);
 
-  counter = toSignal(this.counter$.pipe(takeUntil(this.destroy$)), { requireSync: true });
+  counter = toSignal(this.counter$.pipe(takeUntil(this.destroy$)), { manualCleanup: true, requireSync: true });
   counterX2 = computed(() => this.counter() * 2);
 
   increment() {
